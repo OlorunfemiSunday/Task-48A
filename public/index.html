@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upload Profile</title>
+</head>
+<body>
+  <h1>Upload a Profile Image</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="text" name="username" placeholder="Enter username" required />
+    <input type="file" name="image" accept="image/*" required />
+    <button type="submit">Upload</button>
+  </form>
+
+  <script>
+    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+
+      const res = await fetch("/api/profile", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      alert(JSON.stringify(data));
+    });
+  </script>
+</body>
+</html>

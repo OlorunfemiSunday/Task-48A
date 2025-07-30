@@ -7,14 +7,32 @@ const path = require("path");
 dotenv.config();
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json()); // parse incoming JSON requests
+// CORS RESTRICTION
+const allowedOrigins = [
+  "https://upload-api-task48b-olorunfemisunday-olorunfemi-sundays-projects.vercel.app"
+];
 
-// Static folder for uploaded files
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
+
+
+app.use(express.json());
+
+// Serve uploaded files statically
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Routes
+// API routes
 app.use("/api/profile", profileRoutes);
 
 const PORT = process.env.PORT || 5000;
